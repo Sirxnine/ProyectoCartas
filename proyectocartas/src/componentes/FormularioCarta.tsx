@@ -36,6 +36,28 @@ function FormularioCarta({
       { }
     </div>
   );
+  useEffect(() => {
+  if (cartaExistente) {
+  
+    setNombre(cartaExistente.nombre);
+    setImagen(cartaExistente.imagen);
+    setDescripcion(cartaExistente.descripcion);
+    setTipo(cartaExistente.tipo);
+    setRareza(cartaExistente.rareza);
+    setAtaque(cartaExistente.ataque);
+    setDefensa(cartaExistente.defensa);
+  } else {
+  
+    setNombre('');
+    setImagen('');
+    setDescripcion('');
+    setTipo('');
+    setRareza('');
+    setAtaque(0);
+    setDefensa(0);
+  }
+}, [cartaExistente]);
 }
+
 
 export default FormularioCarta;

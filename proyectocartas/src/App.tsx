@@ -2,7 +2,7 @@ import { useState } from 'react'
 import './App.css'
 import Header from './componentes/Header';
 
-interface ICarta {
+export interface ICarta {
   id: number;
   nombre: string;
   imagen: string;

@@ -1,6 +1,5 @@
 import Carta from './Carta';
 
-// Definimos la interfaz aquí también
 interface ICarta {
   id: number;
   nombre: string;
@@ -18,15 +17,17 @@ function ListaCartas({ cartas, onEditarCarta, onEliminarCarta }: {
   onEliminarCarta: (id: number) => void;
 }) {
   return (
-    <div className="lista-cartas">
-      {cartas.map(carta => (
-        <Carta 
-          key={carta.id}
-          carta={carta}
-          onEditar={onEditarCarta}
-          onEliminar={onEliminarCarta}
-        />
-      ))}
+    <div className="container mx-auto p-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {cartas.map(carta => (
+          <Carta 
+            key={carta.id}
+            carta={carta}
+            onEditar={onEditarCarta}
+            onEliminar={onEliminarCarta}
+          />
+        ))}
+      </div>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import './App.css'
 import Header from './componentes/Header';
 import ListaCartas from './componentes/ListaCartas';
+import FormularioCarta from './componentes/FormularioCarta';
 
 interface ICarta {
   id: number;
@@ -36,60 +37,76 @@ const cartasIniciales: ICarta[] = [
     defensa: 200
   }
 ];
+
 function App() {
   const [cartas, setCartas] = useState<ICarta[]>(cartasIniciales);
   const [mostrarFormulario, setMostrarFormulario] = useState<boolean>(false);
   const [cartaEditando, setCartaEditando] = useState<ICarta | null>(null);
 
+  const agregarCarta = (nuevaCarta: Omit<ICarta, 'id'>) => {
+    const cartaConId: ICarta = {
+      ...nuevaCarta,
+      id: Date.now()
+    };
+    setCartas([...cartas, cartaConId]);
+    setMostrarFormulario(false);
+  };
+
+  const editarCarta = (id: number, datosActualizados: Omit<ICarta, 'id'>) => {
+    const cartasActualizadas = cartas.map(carta => {
+      if (carta.id === id) {
+        return { ...datosActualizados, id };
+      }
+      return carta;
+    });
+    setCartas(cartasActualizadas);
+    setMostrarFormulario(false);
+    setCartaEditando(null);
+  };
+
+  const eliminarCarta = (id: number) => {
+    const cartasFiltradas = cartas.filter(carta => carta.id !== id);
+    setCartas(cartasFiltradas);
+  };
+
   const handleEditarCarta = (carta: ICarta) => {
-  setCartaEditando(carta);
-  setMostrarFormulario(true);
-};
+    setCartaEditando(carta);
+    setMostrarFormulario(true);
+  };
 
   const handleEliminarCarta = (id: number) => {
-  eliminarCarta(id);
-};
+    eliminarCarta(id);
+  };
+
   const handleNuevaCarta = () => {
     setCartaEditando(null);
     setMostrarFormulario(true);
   };
-  const agregarCarta = (nuevaCarta: Omit<ICarta, 'id'>) => {
-  const cartaConId: ICarta = {
-    ...nuevaCarta,
-    id: Date.now() 
-  };
-  
-  setCartas([...cartas, cartaConId]);
-  setMostrarFormulario(false);
-};
-const editarCarta = (id: number, datosActualizados: Omit<ICarta, 'id'>) => {
-  const cartasActualizadas = cartas.map(carta => {
-    if (carta.id === id) {
-      return { ...datosActualizados, id };
-    }
-    return carta;
-  });
-  
-  setCartas(cartasActualizadas);
-  setMostrarFormulario(false);
-  setCartaEditando(null);
-};
-const eliminarCarta = (id: number) => {
-  const cartasFiltradas = cartas.filter(carta => carta.id !== id);
-  setCartas(cartasFiltradas);
-};
 
   return (
-    <div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900">
       <Header onNuevaCarta={handleNuevaCarta} />
       <ListaCartas 
         cartas={cartas}
         onEditarCarta={handleEditarCarta}
         onEliminarCarta={handleEliminarCarta}
       />
+      
+      {mostrarFormulario && (
+        <FormularioCarta
+          cartaExistente={cartaEditando}
+          onGuardar={cartaEditando ? 
+            (datos) => editarCarta(cartaEditando.id, datos) : 
+            agregarCarta
+          }
+          onCancelar={() => {
+            setMostrarFormulario(false);
+            setCartaEditando(null);
+          }}
+        />
+      )}
     </div>
   );
 }
 
-
-export default App
+export default App;

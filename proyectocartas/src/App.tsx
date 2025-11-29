@@ -1,6 +1,6 @@
 import { useState } from 'react'
-
 import './App.css'
+import Header from './componentes/Header';
 
 interface ICarta {
   id: number;
@@ -35,8 +35,22 @@ const cartasIniciales: ICarta[] = [
     defensa: 200
   }
 ];
-const [cartas, setCartas] = useState<ICarta[]>(cartasIniciales);
-const [mostrarFormulario, setMostrarFormulario] = useState<boolean>(false);
-const [cartaEditando, setCartaEditando] = useState<ICarta | null>(null);
+function App() {
+  const [cartas, setCartas] = useState<ICarta[]>(cartasIniciales);
+  const [mostrarFormulario, setMostrarFormulario] = useState<boolean>(false);
+  const [cartaEditando, setCartaEditando] = useState<ICarta | null>(null);
+
+  const handleNuevaCarta = () => {
+    setCartaEditando(null);
+    setMostrarFormulario(true);
+  };
+
+  return (
+    <div>
+      <Header onNuevaCarta={handleNuevaCarta} />
+    </div>
+  );
+}
+
 
 export default cartasIniciales

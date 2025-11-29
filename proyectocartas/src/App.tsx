@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import './App.css'
 import Header from './componentes/Header';
+import ListaCartas from './componentes/ListaCartas';
 
-export interface ICarta {
+interface ICarta {
   id: number;
   nombre: string;
   imagen: string;
@@ -40,17 +41,55 @@ function App() {
   const [mostrarFormulario, setMostrarFormulario] = useState<boolean>(false);
   const [cartaEditando, setCartaEditando] = useState<ICarta | null>(null);
 
+  const handleEditarCarta = (carta: ICarta) => {
+  setCartaEditando(carta);
+  setMostrarFormulario(true);
+};
+
+  const handleEliminarCarta = (id: number) => {
+  eliminarCarta(id);
+};
   const handleNuevaCarta = () => {
     setCartaEditando(null);
     setMostrarFormulario(true);
   };
+  const agregarCarta = (nuevaCarta: Omit<ICarta, 'id'>) => {
+  const cartaConId: ICarta = {
+    ...nuevaCarta,
+    id: Date.now() 
+  };
+  
+  setCartas([...cartas, cartaConId]);
+  setMostrarFormulario(false);
+};
+const editarCarta = (id: number, datosActualizados: Omit<ICarta, 'id'>) => {
+  const cartasActualizadas = cartas.map(carta => {
+    if (carta.id === id) {
+      return { ...datosActualizados, id };
+    }
+    return carta;
+  });
+  
+  setCartas(cartasActualizadas);
+  setMostrarFormulario(false);
+  setCartaEditando(null);
+};
+const eliminarCarta = (id: number) => {
+  const cartasFiltradas = cartas.filter(carta => carta.id !== id);
+  setCartas(cartasFiltradas);
+};
 
   return (
     <div>
       <Header onNuevaCarta={handleNuevaCarta} />
+      <ListaCartas 
+        cartas={cartas}
+        onEditarCarta={handleEditarCarta}
+        onEliminarCarta={handleEliminarCarta}
+      />
     </div>
   );
 }
 
 
-export default cartasIniciales
+export default App
